@@ -1,0 +1,54 @@
+https://leetcode.com/problems/serialize-and-deserialize-binary-tree
+
+https://leetcode.com/problems/throne-inheritance/description/\\
+
+https://leetcode.com/problems/cycle-length-queries-in-a-tree/description/
+
+https://leetcode.com/problems/recover-binary-search-tree/description/
+
+https://leetcode.com/problems/binary-search-tree-iterator/description/
+// do this question without extra space
+
+
+
+class ThroneInheritance {
+    class TreeNode{
+        String name;
+        List<TreeNode> children; 
+        TreeNode(String name, List<TreeNode> children){
+            this.name = name;
+            this.children = children;
+        }                                                                           
+    }
+    TreeNode king;
+    Map<String, TreeNode> hierarchy = new HashMap<>(); 
+    public ThroneInheritance(String kingName) {
+        king = new TreeNode(kingName, new ArrayList<>());
+        hierarchy.put(kingName, king);
+    }
+    
+    public void birth(String parentName, String childName) {
+        TreeNode parent = hierarchy.get(parentName);
+        parent.children.add(new TreeNode(childName, new ArrayList<>()));
+        hierarchy.put(childName, parent.children.get(parent.children.size() - 1));
+    }
+    
+    public void death(String name) {
+        TreeNode died = hierarchy.get(name);
+        died.name = "";
+        hierarchy.remove(died);
+    }
+    
+    public List<String> getInheritanceOrder() {
+        List<String> order = new ArrayList<>();
+        getHierarchy(king, order);
+        return order;
+    }
+    private void getHierarchy(TreeNode parent, List<String> order){
+        if(parent == null) return;
+        if(!parent.name.equals("")) order.add(parent.name);
+        for(TreeNode child : parent.children){
+            getHierarchy(child, order);
+        }
+    }
+}

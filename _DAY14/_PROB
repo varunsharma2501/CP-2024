@@ -1,0 +1,48 @@
+https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/solutions/3169574/solution/
+
+https://leetcode.com/problems/all-possible-full-binary-trees/description/
+
+https://www.geeksforgeeks.org/problems/binary-tree-to-dll/1
+
+https://leetcode.com/problems/search-in-a-binary-search-tree/description/
+
+https://leetcode.com/problems/insert-into-a-binary-search-tree/
+
+https://leetcode.com/problems/delete-node-in-a-bst
+
+https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+
+https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+
+https://leetcode.com/problems/validate-binary-search-tree/
+
+
+class Solution {
+private:
+TreeNode* solve(int &ind,int s, int e, vector<int>& preorder, map<int,int> &mpp)
+{
+//BASE CASE
+if(ind>=preorder.size() or s>e)
+{
+return NULL;
+}
+TreeNode* root= new TreeNode(preorder[ind]);
+int pos = mpp[preorder[ind]];
+int ns=pos+1;
+int ne=pos-1;
+ind++;
+root->left = solve(ind,s,ne,preorder,mpp);
+root->right =solve(ind,ns,e,preorder,mpp);
+return root;
+}
+public:
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+int ind=0;
+map<int,int> mpp;
+for(int i=0; i<inorder.size(); i++)
+{
+mpp[inorder[i]]=i;
+}
+return solve(ind,0,preorder.size()-1,preorder,mpp);
+}
+};

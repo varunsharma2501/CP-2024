@@ -1,0 +1,54 @@
+https://leetcode.com/problems/sum-of-distances-in-tree/
+ do this ques with brute approach where we find distance of each element taken as root in a function and call recursion
+
+ https://leetcode.com/problems/count-all-valid-pickup-and-delivery-options/
+
+ https://leetcode.com/problems/patching-array/description/
+
+<!-- sirs code -->
+ pair<int,int> popSubtree(unordered_map<int, pair<int,int>>& subtree, int curr, int par, vector<vector<int>>& aList) {
+        if (aList[curr].size() == 1) {
+           subtree[curr] = {0,1};
+            return {0,1};
+        }
+        pair<int,int> p = {0,1};
+        for (int i=0; i<aList[curr].size(); i++) {
+            if (par != aList[curr][i]) {
+               pair<int,int> p1 = popSubtree(subtree,aList[curr][i],curr,aList);
+                p.first += p1.first + p1.second;
+                p.second += p1.second;
+            }
+        }
+        subtree[curr] = p;
+        return p;
+    }
+    
+    void popAns(vector<int>& ans,int curr,int par,unordered_map<int, pair<int,int>>& subtree, vector<vector<int>>& aList,int N) {
+        if (curr) {
+            ans[curr] = subtree[curr].first;
+            int tmp = ans[par]-subtree[curr].first-subtree[curr].second;
+            ans[curr] += tmp + (N - subtree[curr].second);
+        }
+        if (aList[curr].size() == 1) return;
+        for (int i=0; i<aList[curr].size(); i++) {
+            if (par != aList[curr][i]) {
+                popAns(ans,aList[curr][i],curr,subtree,aList,N);
+            }
+        }
+    }
+    
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> aList(n);
+        aList[0].push_back(-1);
+        for (int i=0; i < edges.size(); i++) {
+            int x = edges[i][0], y = edges[i][1];
+            aList[x].push_back(y);
+            aList[y].push_back(x);
+        }
+        unordered_map<int, pair<int,int>> subtree;
+        popSubtree(subtree,0,-1,aList);
+        vector<int> ans(n);
+        ans[0] = subtree[0].first;
+        popAns(ans,0,-1,subtree,aList,n);
+        return ans; 
+    }
